@@ -37,6 +37,34 @@ AUC women vs men (pooled models):
 1 Elastic Net     0.826   0.762 1.90  0.0576
 2     XGBoost     0.842   0.780 1.82  0.0689
 
+Threshold metrics by sex (pooled models):
+# A tibble: 6 × 6
+  model       threshold sensitivity_Women specificity_Women sensitivity_Men
+  <chr>           <dbl>             <dbl>             <dbl>           <dbl>
+1 Elastic Net      0.05             1               0.00962           1    
+2 Elastic Net      0.1              0.962           0.535             0.887
+3 Elastic Net      0.2              0.2             0.946             0.144
+4 XGBoost          0.05             0.925           0.530             0.856
+5 XGBoost          0.1              0.888           0.710             0.742
+6 XGBoost          0.2              0.65            0.859             0.546
+# ℹ 1 more variable: specificity_Men <dbl>
+
+Equalised-odds gaps (women - men):
+        model threshold tpr_gap_women_minus_men  tpr_p fpr_gap_women_minus_men
+1 Elastic Net      0.05                  0.0000    NaN                -0.00962
+2 Elastic Net      0.10                  0.0759 0.1136                -0.05971
+3 Elastic Net      0.20                  0.0557 0.4347                 0.03931
+4     XGBoost      0.05                  0.0693 0.2257                -0.01949
+5     XGBoost      0.10                  0.1452 0.0245                -0.03371
+6     XGBoost      0.20                  0.1036 0.2139                -0.00906
+     fpr_p
+1 0.047213
+2 0.042859
+3 0.000374
+4 0.533410
+5 0.225171
+6 0.713832
+
 Contribution of the Sex feature itself (pooled models):
 # A tibble: 4 × 3
   model       sex   mean_shap_of_Sex

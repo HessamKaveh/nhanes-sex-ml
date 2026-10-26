@@ -36,6 +36,7 @@ differently for **women and men**.
 | SHAP | Exact TreeSHAP for XGBoost (`predcontrib`); exact linear SHAP, β·(x − E[x]), for Elastic Net. Both on the log-odds scale; one-hot dummies summed back to their variable. Plots with `shapviz` |
 | Sex comparison | (a) **Pooled** models with sex as a feature, evaluated separately in women and men; (b) **sex-specific** models trained on each sex alone |
 | Evaluation | AUC with DeLong 95% CI, DeLong test women vs men, Brier score, calibration by quintile |
+| Fairness | Sensitivity, specificity, PPV, NPV at fixed thresholds (5/10/20%) per sex; equal-opportunity and equalised-odds gaps |
 
 ## Results
 
@@ -61,6 +62,31 @@ Overall test AUC: Elastic Net 0.79, XGBoost 0.81.
 
 ![ROC by sex](outputs/figures/fig2_roc_by_sex.png)
 ![Calibration by sex](outputs/figures/fig3_calibration_by_sex.png)
+
+### Fairness at a fixed threshold
+
+AUC and calibration describe the whole risk ranking, but a screening tool applies a
+cut-off. Using the **same 10% predicted-risk threshold** for everyone (pooled models,
+test set, exact 95% CIs):
+
+| Model | Sex | Sensitivity | Specificity |
+|---|---|---|---|
+| Elastic Net | Women | 0.96 (0.89–0.99) | 0.54 (0.50–0.57) |
+| Elastic Net | Men | 0.89 (0.81–0.94) | 0.48 (0.43–0.52) |
+| XGBoost | Women | 0.89 (0.80–0.95) | 0.71 (0.67–0.75) |
+| XGBoost | Men | 0.74 (0.64–0.83) | 0.68 (0.64–0.71) |
+
+- At the same threshold **the XGBoost model misses more diabetic men than women**
+  (sensitivity gap 0.15, two-sample test p = 0.025), with similar false positive rates.
+  That breaks *equal opportunity*.
+- The Elastic Net gap goes the same way (0.08, p = 0.11) and its false positive rate is
+  higher in men (p = 0.04).
+- The pooled Elastic Net chose α = 0 (ridge) with strong shrinkage, so its predicted
+  risks sit in a narrow band. Small threshold changes swing its error rates a lot (Fig. 8).
+- Full tables for thresholds 5%, 10% and 20%, including PPV, NPV and flag rate:
+  `outputs/tables/threshold_metrics_by_sex.csv` and `equalized_odds_gaps.csv`.
+
+![Threshold metrics by sex](outputs/figures/fig8_threshold_metrics_by_sex.png)
 
 ### What drives the predictions
 

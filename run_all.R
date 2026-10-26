@@ -143,6 +143,62 @@ p3 <- ggplot(calib, aes(pred, obs, colour = sex)) +
        x = "Mean predicted risk", y = "Observed diabetes rate")
 save_fig(p3, "fig3_calibration_by_sex", 8, 4.5)
 
+# ---- 3b. Fairness at fixed thresholds -----------------------------------------
+# AUC says nothing about how a model behaves once a cut-off is applied. Apply
+# the same risk threshold to women and men and compare error rates
+# (equal opportunity = equal sensitivity; equalised odds = equal sens. and spec.).
+thresholds <- c(0.05, 0.10, 0.20)
+fair <- bind_rows(lapply(names(pooled$pred), function(m) bind_rows(lapply(c("Women", "Men"), function(s) {
+  idx <- test$Sex == s
+  bind_rows(lapply(thresholds, function(t)
+    cbind(model = m, sex = s, threshold_metrics(test$diabetes[idx], pooled$pred[[m]][idx], t))))
+}))))
+write.csv(fair, "outputs/tables/threshold_metrics_by_sex.csv", row.names = FALSE)
+
+# Women - men gap in sensitivity (TPR) and false positive rate, two-sample test
+fair_gaps <- bind_rows(lapply(names(pooled$pred), function(m) bind_rows(lapply(thresholds, function(t) {
+  pos <- pooled$pred[[m]] >= t
+  gap <- function(cls) {
+    k <- vapply(c("Women", "Men"), function(s) sum(pos & test$Sex == s & test$diabetes == cls), numeric(1))
+    n <- vapply(c("Women", "Men"), function(s) sum(test$Sex == s & test$diabetes == cls), numeric(1))
+    c(diff = unname(k[1] / n[1] - k[2] / n[2]), p = suppressWarnings(prop.test(k, n)$p.value))
+  }
+  tpr <- gap(1); fpr <- gap(0)
+  data.frame(model = m, threshold = t,
+             tpr_gap_women_minus_men = tpr[["diff"]], tpr_p = tpr[["p"]],
+             fpr_gap_women_minus_men = fpr[["diff"]], fpr_p = fpr[["p"]])
+}))))
+write.csv(fair_gaps, "outputs/tables/equalized_odds_gaps.csv", row.names = FALSE)
+cat("\nThreshold metrics by sex (pooled models):\n")
+print(fair |> filter(metric %in% c("sensitivity", "specificity")) |>
+        select(model, sex, threshold, metric, value) |>
+        pivot_wider(names_from = c(metric, sex), values_from = value), digits = 3)
+cat("\nEqualised-odds gaps (women - men):\n"); print(fair_gaps, digits = 3)
+
+# Fig 8: sensitivity and specificity across thresholds, by sex
+grid <- seq(0.02, 0.5, by = 0.01)
+curves <- bind_rows(lapply(names(pooled$pred), function(m) bind_rows(lapply(c("Women", "Men"), function(s) {
+  idx <- test$Sex == s
+  y <- test$diabetes[idx]; p <- pooled$pred[[m]][idx]
+  data.frame(model = m, sex = s, threshold = grid,
+             Sensitivity = vapply(grid, function(t) mean(p[y == 1] >= t), numeric(1)),
+             Specificity = vapply(grid, function(t) mean(p[y == 0] <  t), numeric(1)))
+}))))
+p8 <- curves |>
+  pivot_longer(c(Sensitivity, Specificity), names_to = "metric") |>
+  mutate(sex = factor(sex, levels = c("Women", "Men"))) |>
+  ggplot(aes(threshold, value, colour = sex)) +
+  geom_vline(xintercept = 0.10, linetype = 2, colour = "grey60") +
+  geom_line(linewidth = 0.8) +
+  facet_grid(metric ~ model) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  scale_colour_manual(values = sex_cols, name = NULL) +
+  labs(title = "Same threshold, different error rates? (pooled models, test set)",
+       subtitle = "Dashed line: 10% predicted risk, the threshold reported in the README",
+       x = "Risk threshold", y = NULL)
+save_fig(p8, "fig8_threshold_metrics_by_sex", 9, 6)
+
 # ---- 4. Elastic Net coefficients: women vs men --------------------------------
 coefs <- bind_rows(lapply(names(by_sex), function(s)
   cbind(sex = s, enet_coefs(by_sex[[s]]$en))))

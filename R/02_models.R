@@ -59,3 +59,22 @@ evaluate <- function(y, p) {
              brier = mean((p - y)^2),
              mean_pred = mean(p))
 }
+
+# Sensitivity, specificity, PPV, NPV and flag rate at a fixed risk threshold,
+# with exact (Clopper-Pearson) 95% CIs.
+threshold_metrics <- function(y, p, thr) {
+  pos <- p >= thr
+  rate <- function(x, n) {
+    if (n == 0) return(c(NA, NA, NA))
+    c(x / n, binom.test(x, n)$conf.int)
+  }
+  tp <- sum(pos & y == 1); fn <- sum(!pos & y == 1)
+  tn <- sum(!pos & y == 0); fp <- sum(pos & y == 0)
+  out <- rbind(sensitivity = rate(tp, tp + fn),
+               specificity = rate(tn, tn + fp),
+               ppv         = rate(tp, tp + fp),
+               npv         = rate(tn, tn + fn),
+               flag_rate   = rate(tp + fp, length(y)))
+  data.frame(threshold = thr, metric = rownames(out),
+             value = out[, 1], lo = out[, 2], hi = out[, 3], row.names = NULL)
+}
