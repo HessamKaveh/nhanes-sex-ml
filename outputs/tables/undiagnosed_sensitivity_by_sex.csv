@@ -1,0 +1,25 @@
+"model","sex","group","sensitivity","lo","hi","n_cases"
+"Elastic Net","Women","Diagnosed cases
+(diagnosed-label model)",0.890151515151515,0.846059848869318,0.925187541184799,264
+"Elastic Net","Women","Undiagnosed cases
+(diagnosed-label model)",0.830188679245283,0.701978331894598,0.919291123533177,53
+"Elastic Net","Women","Undiagnosed cases
+(total-label model)",0.924528301886792,0.81789216361514,0.979053968560955,53
+"Elastic Net","Men","Diagnosed cases
+(diagnosed-label model)",0.846428571428571,0.79876702464061,0.88657627494538,280
+"Elastic Net","Men","Undiagnosed cases
+(diagnosed-label model)",0.797297297297297,0.687804971766388,0.88187590101361,74
+"Elastic Net","Men","Undiagnosed cases
+(total-label model)",0.945945945945946,0.867344858778176,0.985077654807848,74
+"XGBoost","Women","Diagnosed cases
+(diagnosed-label model)",0.848484848484849,0.799444761100181,0.889496692731006,264
+"XGBoost","Women","Undiagnosed cases
+(diagnosed-label model)",0.792452830188679,0.658928633050733,0.891577176714048,53
+"XGBoost","Women","Undiagnosed cases
+(total-label model)",0.849056603773585,0.724078821145283,0.932507461884036,53
+"XGBoost","Men","Diagnosed cases
+(diagnosed-label model)",0.821428571428571,0.771446426321501,0.864459587815373,280
+"XGBoost","Men","Undiagnosed cases
+(diagnosed-label model)",0.743243243243243,0.628435145111789,0.837795627290976,74
+"XGBoost","Men","Undiagnosed cases
+(total-label model)",0.810810810810811,0.702994661735635,0.892526978648921,74

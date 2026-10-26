@@ -280,6 +280,7 @@ cat("\nContribution of the Sex feature itself (pooled models):\n"); print(sex_sh
 
 # ---- 7. Sensitivity analyses -------------------------------------------------
 source("analyses/missing_data.R")
+source("analyses/undiagnosed.R")
 
 writeLines(capture.output(sessionInfo()), "outputs/sessionInfo.txt")
 cat("\nDone. Figures in outputs/figures, tables in outputs/tables.\n")

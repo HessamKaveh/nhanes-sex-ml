@@ -183,4 +183,80 @@ lme4 was built with Matrix ABI version 1
 Current Matrix ABI version is 2
 Please re-install lme4 from source or restore original ‘Matrix’ package
 
+==== Undiagnosed diabetes ====
+Participants with lab data or a diagnosis: 4459 of 4644 
+Undiagnosed diabetes by sex:
+    sex    n diagnosed_pct undiagnosed_pct total_pct n_total_dm n_undiagnosed
+1 Women 2300          11.5            2.30      13.8        317            53
+2   Men 2159          13.0            3.43      16.4        354            74
+  share_undiagnosed_pct share_lo share_hi share_p_value
+1                  16.7     12.8     21.3           0.2
+2                  20.9     16.8     25.5           0.2
+Cross-fitting models on the diagnosed label...
+Cross-fitting models on the total-diabetes label...
+
+AUC by label and sex (out-of-fold):
+         model   sex                                                  task
+1  Elastic Net Women            Diagnosed label: detect diagnosed diabetes
+2  Elastic Net Women                      Total label: detect any diabetes
+3  Elastic Net Women Diagnosed label: find undiagnosed among non-diagnosed
+4  Elastic Net Women     Total label: find undiagnosed among non-diagnosed
+5  Elastic Net   Men            Diagnosed label: detect diagnosed diabetes
+6  Elastic Net   Men                      Total label: detect any diabetes
+7  Elastic Net   Men Diagnosed label: find undiagnosed among non-diagnosed
+8  Elastic Net   Men     Total label: find undiagnosed among non-diagnosed
+9      XGBoost Women            Diagnosed label: detect diagnosed diabetes
+10     XGBoost Women                      Total label: detect any diabetes
+11     XGBoost Women Diagnosed label: find undiagnosed among non-diagnosed
+12     XGBoost Women     Total label: find undiagnosed among non-diagnosed
+13     XGBoost   Men            Diagnosed label: detect diagnosed diabetes
+14     XGBoost   Men                      Total label: detect any diabetes
+15     XGBoost   Men Diagnosed label: find undiagnosed among non-diagnosed
+16     XGBoost   Men     Total label: find undiagnosed among non-diagnosed
+     auc    lo    hi
+1  0.835 0.812 0.858
+2  0.842 0.821 0.862
+3  0.800 0.747 0.854
+4  0.818 0.771 0.865
+5  0.791 0.764 0.817
+6  0.798 0.774 0.822
+7  0.781 0.733 0.829
+8  0.790 0.747 0.834
+9  0.857 0.835 0.879
+10 0.861 0.841 0.881
+11 0.820 0.769 0.871
+12 0.832 0.783 0.882
+13 0.809 0.782 0.836
+14 0.809 0.785 0.833
+15 0.782 0.737 0.828
+16 0.786 0.743 0.828
+
+Sensitivity at 10% risk:
+         model   sex                                      group sensitivity
+1  Elastic Net Women   Diagnosed cases\n(diagnosed-label model)       0.890
+2  Elastic Net Women Undiagnosed cases\n(diagnosed-label model)       0.830
+3  Elastic Net Women     Undiagnosed cases\n(total-label model)       0.925
+4  Elastic Net   Men   Diagnosed cases\n(diagnosed-label model)       0.846
+5  Elastic Net   Men Undiagnosed cases\n(diagnosed-label model)       0.797
+6  Elastic Net   Men     Undiagnosed cases\n(total-label model)       0.946
+7      XGBoost Women   Diagnosed cases\n(diagnosed-label model)       0.848
+8      XGBoost Women Undiagnosed cases\n(diagnosed-label model)       0.792
+9      XGBoost Women     Undiagnosed cases\n(total-label model)       0.849
+10     XGBoost   Men   Diagnosed cases\n(diagnosed-label model)       0.821
+11     XGBoost   Men Undiagnosed cases\n(diagnosed-label model)       0.743
+12     XGBoost   Men     Undiagnosed cases\n(total-label model)       0.811
+      lo    hi n_cases
+1  0.846 0.925     264
+2  0.702 0.919      53
+3  0.818 0.979      53
+4  0.799 0.887     280
+5  0.688 0.882      74
+6  0.867 0.985      74
+7  0.799 0.889     264
+8  0.659 0.892      53
+9  0.724 0.933      53
+10 0.771 0.864     280
+11 0.628 0.838      74
+12 0.703 0.893      74
+
 Done. Figures in outputs/figures, tables in outputs/tables.
