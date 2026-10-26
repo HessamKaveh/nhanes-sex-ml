@@ -13,3 +13,4 @@ dependencies:
   - r-proc
   - r-rsample
   - r-mice
+  - r-haven

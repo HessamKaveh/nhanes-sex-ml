@@ -22,8 +22,9 @@ differently for **women and men**.
   11.1% in women and 12.4% in men.
 - Features: age, BMI, pulse, systolic/diastolic BP, total and HDL cholesterol,
   income-to-poverty ratio, sleep hours, alcohol days/year, race/ethnicity,
-  education, physical activity, smoking history. Lab glucose/HbA1c are not in the
-  package and would leak the outcome anyway.
+  education, physical activity, smoking history. Lab glucose and HbA1c are never
+  used as predictors, because they define diabetes. They are merged from CDC files only
+  to label undiagnosed cases.
 
 ## Methods
 
@@ -36,6 +37,7 @@ differently for **women and men**.
 | SHAP | Exact TreeSHAP for XGBoost (`predcontrib`); exact linear SHAP, β·(x − E[x]), for Elastic Net. Both on the log-odds scale; one-hot dummies summed back to their variable. Plots with `shapviz` |
 | Sex comparison | (a) **Pooled** models with sex as a feature, evaluated separately in women and men; (b) **sex-specific** models trained on each sex alone |
 | Missing data | Sensitivity analysis: median/mode, missingness indicators, complete cases, multiple imputation with `mice` (m = 5) |
+| Undiagnosed diabetes | Lab-defined diabetes from CDC HbA1c / fasting glucose files; 5-fold out-of-fold models trained on the diagnosed label vs the total (diagnosed + lab) label |
 | Evaluation | AUC with DeLong 95% CI, DeLong test women vs men, Brier score, calibration by quintile |
 | Fairness | Sensitivity, specificity, PPV, NPV at fixed thresholds (5/10/20%) per sex; equal-opportunity and equalised-odds gaps |
 
@@ -121,6 +123,37 @@ The pooled models were refitted under five strategies (`analyses/missing_data.R`
 
 ![Missing-data sensitivity](outputs/figures/fig9_missing_data_sensitivity.png)
 
+### Undiagnosed diabetes
+
+The main outcome is *diagnosed* diabetes, so people with diabetes who were never
+diagnosed count as negatives during training. The `NHANES` package keeps the original
+NHANES `SEQN` as its `ID`, which makes it possible to merge **HbA1c and fasting plasma
+glucose** from the CDC lab files (`GHB_F/G`, `GLU_F/G`, downloaded automatically) and
+use the ADA definition: **undiagnosed = HbA1c ≥ 6.5% or fasting glucose ≥ 126 mg/dL, with
+no reported diagnosis** (`analyses/undiagnosed.R`, n = 4,459 with lab data or a diagnosis).
+
+| | Women | Men |
+|---|---|---|
+| Diagnosed | 11.5% | 13.0% |
+| Undiagnosed | 2.3% | 3.4% |
+| Share of all diabetes that is undiagnosed | 17% (13–21%) | 21% (17–26%) |
+
+More men than women have undiagnosed diabetes (χ² p = 0.20 for the share). Using
+5-fold out-of-fold predictions, so every undiagnosed case is scored by a model that never
+saw it:
+
+- Models trained on the diagnosed label still rank undiagnosed cases above lab-normal
+  participants (AUC 0.80–0.82 in women, 0.78 in men). At the 10% threshold they flag
+  fewer undiagnosed than diagnosed cases, and **undiagnosed men are flagged least**
+  (XGBoost: 74% of undiagnosed men vs 79% of undiagnosed women and 82–85% of diagnosed cases).
+- Retraining on the **lab-based total-diabetes label** raises sensitivity for undiagnosed
+  cases (XGBoost 81% in men, 85% in women; Elastic Net 93–95%). Part of this gain comes
+  from the higher base rate, which pushes more predictions over a fixed 10% threshold.
+- With 53 undiagnosed women and 74 undiagnosed men, every CI here is wide. Treat this
+  as a demonstration of the problem, not a precise estimate.
+
+![Undiagnosed diabetes by sex](outputs/figures/fig10_undiagnosed_by_sex.png)
+
 ### What drives the predictions
 
 ![SHAP beeswarm](outputs/figures/fig6_shap_beeswarm_pooled.png)
@@ -149,7 +182,9 @@ In the sex-specific models:
 - This is a teaching/demo analysis, not a clinical model. NHANES survey weights and
   design are not used; the `NHANES` package is already resampled to be roughly
   representative.
-- "Diabetes" is self-reported diagnosis, so undiagnosed cases count as negatives.
+- The main outcome is self-reported diagnosis, so undiagnosed cases count as negatives.
+  See *Undiagnosed diabetes* above for a lab-based check. Fasting glucose is available
+  only for the morning fasting subsample, and the lab definition uses one measurement.
 - The bootstrap CIs on SHAP importance resample test rows only and ignore
   model-fitting uncertainty, so they are too narrow for formal inference.
 - Elastic Net coefficients across the two sexes are shrunk by different λ values
@@ -162,7 +197,7 @@ In the sex-specific models:
 conda env create -f environment.yml
 conda activate r-nhanes
 Rscript -e 'install.packages("NHANES", repos = "https://cloud.r-project.org")'
-Rscript run_all.R        # ~2 min; writes outputs/figures and outputs/tables
+Rscript run_all.R        # ~4 min (downloads ~0.7 MB of CDC lab files on first run); writes outputs/figures and outputs/tables
 ```
 
 ## Layout
@@ -174,6 +209,7 @@ R/02_models.R      Elastic Net, XGBoost, evaluation
 R/03_plots.R       theme, colours, labels
 R/04_shap.R        SHAP for both models, importance with bootstrap CI
 analyses/missing_data.R   missing-data sensitivity analysis (incl. MICE)
+analyses/undiagnosed.R    undiagnosed diabetes from CDC lab data, label comparison
 outputs/figures/   PNG figures
 outputs/tables/    CSV results (performance, coefficients, SHAP importance, ...)
 ```

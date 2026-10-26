@@ -1,0 +1,17 @@
+"model","sex","task","auc","lo","hi"
+"Elastic Net","Women","Diagnosed label: detect diagnosed diabetes",0.834875647437042,0.812140246801108,0.857611048072977
+"Elastic Net","Women","Total label: detect any diabetes",0.841609516855416,0.820986638217779,0.862232395493053
+"Elastic Net","Women","Diagnosed label: find undiagnosed among non-diagnosed",0.800283542184036,0.746993870865266,0.853573213502806
+"Elastic Net","Women","Total label: find undiagnosed among non-diagnosed",0.818095319650996,0.77111309997318,0.865077539328811
+"Elastic Net","Men","Diagnosed label: detect diagnosed diabetes",0.79057629438151,0.763840580921959,0.817312007841061
+"Elastic Net","Men","Total label: detect any diabetes",0.798189273361817,0.774184953873628,0.822193592850005
+"Elastic Net","Men","Diagnosed label: find undiagnosed among non-diagnosed",0.780923860148237,0.733278097851992,0.828569622444482
+"Elastic Net","Men","Total label: find undiagnosed among non-diagnosed",0.79049187691847,0.747009412447145,0.833974341389795
+"XGBoost","Women","Diagnosed label: detect diagnosed diabetes",0.857303387509674,0.835183680759761,0.879423094259587
+"XGBoost","Women","Total label: detect any diabetes",0.86121464625977,0.840980902844071,0.881448389675468
+"XGBoost","Women","Diagnosed label: find undiagnosed among non-diagnosed",0.819912653783575,0.768581826648761,0.87124348091839
+"XGBoost","Women","Total label: find undiagnosed among non-diagnosed",0.832034557893034,0.782525646987871,0.881543468798197
+"XGBoost","Men","Diagnosed label: detect diagnosed diabetes",0.808855394206645,0.78151388095344,0.83619690745985
+"XGBoost","Men","Total label: detect any diabetes",0.809153794387843,0.785150982197565,0.833156606578121
+"XGBoost","Men","Diagnosed label: find undiagnosed among non-diagnosed",0.782466122632328,0.737097717998765,0.82783452726589
+"XGBoost","Men","Total label: find undiagnosed among non-diagnosed",0.785827655910758,0.74336042322113,0.828294888600386
