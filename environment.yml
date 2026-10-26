@@ -12,3 +12,4 @@ dependencies:
   - r-tidyr
   - r-proc
   - r-rsample
+  - r-mice

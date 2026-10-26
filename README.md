@@ -35,6 +35,7 @@ differently for **women and men**.
 | XGBoost | depth 3, η = 0.03, subsample/colsample 0.8; number of rounds by 5-fold CV with early stopping |
 | SHAP | Exact TreeSHAP for XGBoost (`predcontrib`); exact linear SHAP, β·(x − E[x]), for Elastic Net. Both on the log-odds scale; one-hot dummies summed back to their variable. Plots with `shapviz` |
 | Sex comparison | (a) **Pooled** models with sex as a feature, evaluated separately in women and men; (b) **sex-specific** models trained on each sex alone |
+| Missing data | Sensitivity analysis: median/mode, missingness indicators, complete cases, multiple imputation with `mice` (m = 5) |
 | Evaluation | AUC with DeLong 95% CI, DeLong test women vs men, Brier score, calibration by quintile |
 | Fairness | Sensitivity, specificity, PPV, NPV at fixed thresholds (5/10/20%) per sex; equal-opportunity and equalised-odds gaps |
 
@@ -88,6 +89,38 @@ test set, exact 95% CIs):
 
 ![Threshold metrics by sex](outputs/figures/fig8_threshold_metrics_by_sex.png)
 
+### Missing data
+
+31% of participants miss at least one predictor. Missingness is **not the same for
+the two sexes**: alcohol use is missing for 28% of women vs 14% of men, and BP/pulse
+for 5% vs 3%. Diabetes prevalence also differs between participants with and without
+missing values (e.g. 16% vs 11% when cholesterol is missing), so values are probably
+not missing completely at random.
+
+The pooled models were refitted under five strategies (`analyses/missing_data.R`):
+
+| Scenario | EN women | EN men | XGB women | XGB men |
+|---|---|---|---|---|
+| Baseline (EN: median/mode; XGB: native NA) | 0.83 | 0.76 | 0.84 | 0.78 |
+| Median/mode for both | 0.83 | 0.76 | 0.85 | 0.78 |
+| Median + missingness flags | 0.83 | 0.77 | 0.85 | 0.78 |
+| **MICE**, m = 5, averaged predictions | 0.83 | 0.77 | 0.85 | 0.79 |
+| Complete cases (n test = 966) | 0.78 | 0.77 | 0.79 | 0.76 |
+| Baseline on the same complete-case test rows | 0.79 | 0.75 | 0.80 | 0.77 |
+
+- Imputation choices barely move AUC (≤ 0.01), and the women-men gap stays at about 0.06.
+- **Complete-case analysis is the outlier.** It discards 38% of the women in the test
+  set but only 24% of the men. The women's AUC drops to about 0.79 and the sex gap
+  almost disappears. The baseline model shows the same drop on those rows, so the
+  drop comes from *who* is excluded, not from the modelling. Dropping incomplete rows
+  would change the sex comparison.
+- MICE: chained equations with predictive mean matching for numeric and logistic or
+  polytomous regression for factor variables. The imputation model is estimated on
+  training rows only (`ignore` = test), and the outcome is left out so test labels
+  cannot leak.
+
+![Missing-data sensitivity](outputs/figures/fig9_missing_data_sensitivity.png)
+
 ### What drives the predictions
 
 ![SHAP beeswarm](outputs/figures/fig6_shap_beeswarm_pooled.png)
@@ -129,7 +162,7 @@ In the sex-specific models:
 conda env create -f environment.yml
 conda activate r-nhanes
 Rscript -e 'install.packages("NHANES", repos = "https://cloud.r-project.org")'
-Rscript run_all.R        # ~20 s; writes outputs/figures and outputs/tables
+Rscript run_all.R        # ~2 min; writes outputs/figures and outputs/tables
 ```
 
 ## Layout
@@ -140,6 +173,7 @@ R/01_data.R        loading, de-duplication, split, pre-processing
 R/02_models.R      Elastic Net, XGBoost, evaluation
 R/03_plots.R       theme, colours, labels
 R/04_shap.R        SHAP for both models, importance with bootstrap CI
+analyses/missing_data.R   missing-data sensitivity analysis (incl. MICE)
 outputs/figures/   PNG figures
 outputs/tables/    CSV results (performance, coefficients, SHAP importance, ...)
 ```
