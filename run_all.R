@@ -278,5 +278,8 @@ sex_shap <- bind_rows(lapply(names(pooled$shap), function(m) data.frame(
 write.csv(sex_shap, "outputs/tables/sex_feature_shap.csv", row.names = FALSE)
 cat("\nContribution of the Sex feature itself (pooled models):\n"); print(sex_shap, digits = 3)
 
+# ---- 7. Sensitivity analyses -------------------------------------------------
+source("analyses/missing_data.R")
+
 writeLines(capture.output(sessionInfo()), "outputs/sessionInfo.txt")
 cat("\nDone. Figures in outputs/figures, tables in outputs/tables.\n")
