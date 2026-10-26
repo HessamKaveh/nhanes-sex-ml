@@ -1,0 +1,4 @@
+"scheme","sex","enet_alpha","enet_lambda","xgb_nrounds"
+"Pooled","All",0,0.237479515060634,197
+"Sex-specific","Women",0.5,0.0203559594640301,170
+"Sex-specific","Men",0.25,0.0659644502608092,167

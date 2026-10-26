@@ -1,0 +1,41 @@
+"sex","feature","coef"
+"Women","Age",0.793924543118821
+"Women","BMI",0.368278736058307
+"Women","Pulse",0.0453423530554522
+"Women","BPSysAve",0.149203800606379
+"Women","BPDiaAve",0
+"Women","TotChol",-0.0499946963580124
+"Women","DirectChol",-0.191982570499209
+"Women","Poverty",-0.0158367497291043
+"Women","SleepHrsNight",0
+"Women","AlcoholYear",-0.118195185939911
+"Women","Race1Hispanic",0
+"Women","Race1Mexican",0
+"Women","Race1White",-0.0774672192991267
+"Women","Race1Other",0
+"Women","Education9 - 11th Grade",0
+"Women","EducationHigh School",0
+"Women","EducationSome College",0
+"Women","EducationCollege Grad",0
+"Women","PhysActiveYes",0
+"Women","Smoke100Yes",0
+"Men","Age",0.464110916721142
+"Men","BMI",0.235526422458423
+"Men","Pulse",0
+"Men","BPSysAve",0.0573428202698382
+"Men","BPDiaAve",0
+"Men","TotChol",-0.0928268296701894
+"Men","DirectChol",0
+"Men","Poverty",-0.0441341016370305
+"Men","SleepHrsNight",-6.91691871598636e-05
+"Men","AlcoholYear",-0.00123891082061329
+"Men","Race1Hispanic",0
+"Men","Race1Mexican",0
+"Men","Race1White",0
+"Men","Race1Other",0
+"Men","Education9 - 11th Grade",0
+"Men","EducationHigh School",0
+"Men","EducationSome College",0
+"Men","EducationCollege Grad",0
+"Men","PhysActiveYes",0
+"Men","Smoke100Yes",0

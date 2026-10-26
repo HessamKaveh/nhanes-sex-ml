@@ -1,0 +1,14 @@
+name: r-nhanes
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.4
+  - r-glmnet
+  - r-xgboost>=3
+  - r-shapviz
+  - r-ggplot2
+  - r-patchwork
+  - r-dplyr
+  - r-tidyr
+  - r-proc
+  - r-rsample

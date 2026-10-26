@@ -1,0 +1,5 @@
+"model","sex","mean_shap_of_Sex"
+"Elastic Net","Women",-0.00328646725148582
+"Elastic Net","Men",0.00353846474041764
+"XGBoost","Women",-0.00145769067884513
+"XGBoost","Men",0.00142799997870959

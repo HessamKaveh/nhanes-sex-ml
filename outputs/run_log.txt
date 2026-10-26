@@ -1,0 +1,49 @@
+Cohort:
+# A tibble: 2 × 7
+  Sex       n diabetes_pct age_mean bmi_mean sbp_mean hdl_mean
+  <fct> <int>        <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+1 Women  2389         11.1     47.9     29.2     119.     1.49
+2 Men    2255         12.4     46.9     28.6     123.     1.23
+
+Fitting pooled models...
+Fitting sex-specific models...
+
+Test-set performance:
+         model       scheme   sex    n prevalence   auc auc_lo auc_hi  brier
+1  Elastic Net       Pooled   All 1394      0.127 0.794  0.760  0.827 0.1025
+2  Elastic Net       Pooled Women  704      0.114 0.826  0.784  0.867 0.0915
+3  Elastic Net       Pooled   Men  690      0.141 0.762  0.711  0.813 0.1138
+4  Elastic Net Sex-specific Women  704      0.114 0.818  0.776  0.860 0.0880
+5  Elastic Net Sex-specific   Men  690      0.141 0.773  0.723  0.822 0.1107
+6      XGBoost       Pooled   All 1394      0.127 0.809  0.775  0.842 0.0931
+7      XGBoost       Pooled Women  704      0.114 0.842  0.798  0.886 0.0827
+8      XGBoost       Pooled   Men  690      0.141 0.780  0.730  0.830 0.1037
+9      XGBoost Sex-specific Women  704      0.114 0.840  0.798  0.883 0.0830
+10     XGBoost Sex-specific   Men  690      0.141 0.775  0.723  0.828 0.1041
+   mean_pred
+1      0.115
+2      0.116
+3      0.114
+4      0.117
+5      0.117
+6      0.116
+7      0.116
+8      0.115
+9      0.113
+10     0.114
+
+AUC women vs men (pooled models):
+        model auc_women auc_men    z p_value
+1 Elastic Net     0.826   0.762 1.90  0.0576
+2     XGBoost     0.842   0.780 1.82  0.0689
+
+Contribution of the Sex feature itself (pooled models):
+# A tibble: 4 × 3
+  model       sex   mean_shap_of_Sex
+  <chr>       <fct>            <dbl>
+1 Elastic Net Women         -0.00329
+2 Elastic Net Men            0.00354
+3 XGBoost     Women         -0.00146
+4 XGBoost     Men            0.00143
+
+Done. Figures in outputs/figures, tables in outputs/tables.
