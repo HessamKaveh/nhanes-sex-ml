@@ -216,3 +216,7 @@ outputs/tables/    CSV results (performance, coefficients, SHAP importance, ...)
 
 ---
 
+
+## License
+
+Code released under the [MIT License](LICENSE). NHANES data are public domain (CDC/NCHS).
