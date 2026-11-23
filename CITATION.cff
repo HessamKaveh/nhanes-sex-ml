@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+type: software
+title: "Diabetes risk in NHANES: Elastic Net vs XGBoost, explained with SHAP, women vs men"
+abstract: "A reproducible R project that predicts diagnosed diabetes in US adults from NHANES, compares Elastic Net with XGBoost, explains both with SHAP and compares their behaviour in women and men."
+authors:
+  - family-names: Kaveh
+    given-names: Hessam
+    affiliation: "Istituto Italiano di Tecnologia (IIT)"
+repository-code: "https://github.com/HessamKaveh/nhanes-sex-ml"
+license: MIT
+version: 1.0.0
+date-released: 2026-11-23

@@ -1,5 +1,7 @@
 # Diabetes risk in NHANES: Elastic Net vs XGBoost, explained with SHAP, women vs men
 
+[![CI](https://github.com/HessamKaveh/nhanes-sex-ml/actions/workflows/ci.yml/badge.svg)](https://github.com/HessamKaveh/nhanes-sex-ml/actions/workflows/ci.yml) ![R 4.4](https://img.shields.io/badge/R-4.4-276DC3.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A small, fully reproducible R project that predicts **diagnosed diabetes** in US adults
 from the public [NHANES](https://cran.r-project.org/package=NHANES) data (2009–2012),
 compares a penalised linear model (**Elastic Net**) with a gradient-boosted tree model
@@ -198,6 +200,7 @@ conda env create -f environment.yml
 conda activate r-nhanes
 Rscript -e 'install.packages("NHANES", repos = "https://cloud.r-project.org")'
 Rscript run_all.R        # ~4 min (downloads ~0.7 MB of CDC lab files on first run); writes outputs/figures and outputs/tables
+Rscript tests/run_tests.R  # unit tests of the helpers (needs testthat; no data required)
 ```
 
 ## Layout
@@ -212,6 +215,7 @@ analyses/missing_data.R   missing-data sensitivity analysis (incl. MICE)
 analyses/undiagnosed.R    undiagnosed diabetes from CDC lab data, label comparison
 outputs/figures/   PNG figures
 outputs/tables/    CSV results (performance, coefficients, SHAP importance, ...)
+tests/             testthat unit tests (run with Rscript tests/run_tests.R)
 ```
 
 ---
@@ -220,3 +224,7 @@ outputs/tables/    CSV results (performance, coefficients, SHAP importance, ...)
 ## License
 
 Code released under the [MIT License](LICENSE). NHANES data are public domain (CDC/NCHS).
+
+## Citation
+
+If you use this code, please cite it via [CITATION.cff](CITATION.cff) (GitHub's "Cite this repository" button).
